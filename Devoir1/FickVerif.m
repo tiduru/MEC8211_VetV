@@ -22,7 +22,7 @@ clear all;
 % Paramètres de la solution par différences finies
 Nmin   = 3;    % Nombre de noeuds minimal
 Nmax   = 10;   % Nombre de noeuds maximal
-R      = 1;    % Rayon du pilier [m]
+R      = 0.5;  % Rayon du pilier [m]
 dt     = 1;    % Pas de temps [an]
 Ndt    = 1000; % Nombre de pas de temps
 tsMeth = 0;    % Méthode "constante" pour le terme source
