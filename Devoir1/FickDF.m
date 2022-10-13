@@ -60,7 +60,7 @@ if(Ndt < 1 || (floor(Ndt) ~= ceil(Ndt)))
    valid = false;
 end
 if(schema ~=1 && schema ~=2)
-   disp("L'ordre du schéma de différentiation doit être 1 ou 2");
+   disp("L'ordre du schéma de différenciation doit être 1 ou 2");
    valid = false;
 end
 if(tsMeth ~=0 && tsMeth ~=1)

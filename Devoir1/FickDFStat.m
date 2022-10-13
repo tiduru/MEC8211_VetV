@@ -9,7 +9,7 @@
 % Cette fonction résout l'équation différentielle elliptique représentant
 % la 2e loi de Frick exprimée en coordonnées cylindriques lorsque le régime
 % stationnaire est atteint pour un terme source constant. La concentration
-% C(r,t) est calculée pour:
+% C(r) est calculée pour:
 %
 %   - Un pilier de béton de rayon R submergé dans une eau saline
 %   - Un pilier (cylindre) infiniment haut
@@ -22,7 +22,7 @@
 % Variables
 % ---------
 %   entrée : Ntot   - Nombre de noeuds, Entier >= 3
-%            schema - Schéma de différentiation: 1 - Ordre 1
+%            schema - Schéma de différenciation: 1 - Ordre 1
 %                                                2 - Ordre 2
 %
 %   sortie : C      - Concentrations [mol/m^3]
@@ -46,7 +46,7 @@ if(Ntot < 3 || (floor(Ntot) ~= ceil(Ntot)))
    valid = false;
 end
 if(schema ~=1 && schema ~=2)
-   disp("L'ordre du schéma de différentiation doit être 1 ou 2");
+   disp("L'ordre du schéma de différenciation doit être 1 ou 2");
    valid = false;
 end
 if(~valid)
