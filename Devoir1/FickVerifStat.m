@@ -118,9 +118,11 @@ disp(sprintf("pentes O(%d): L1=%f, L2=%f, Linf=%f", ...
 % Création du graphe
 figure
 loglog(h, L1, h, L2, h, Linf);
-title(sprintf("Erreurs pour un schéma de différenciation O(%d)", schema));
-xlabel('h');
+title(sprintf("Erreurs pour un schéma de différenciation O(%d)\n Méthode %s", ...
+              schema, DFsol));
+xlabel('h [m]');
 ylabel('Erreur');
 legend('L_{l}', 'L_{2}', 'L_{\infty}');
+grid on
 
 end

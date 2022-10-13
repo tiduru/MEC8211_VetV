@@ -24,8 +24,8 @@
 %            Ndt    - Nombre de pas de temps, Entier >= 1
 %            schema - Schéma de différentiation: 1 - Ordre 1
 %                                                2 - Ordre 2
-%            tsMeth - Terme source: 0 - Constant S=1E-8 [mol/m^3/an]
-%                                   1 - 1er ordre, S=kC avec k=4E-9 [an^-1]
+%            tsMeth - Terme source: 0 - Constant S=1E-8 [mol/m^3/s]
+%                                   1 - 1er ordre, S=kC avec k=4E-9 [s^-1]
 %
 %   sortie : C      - Concentrations [mol/m^3]. Taille Ndt+1 x Ntot
 %                     Rangées (temps)  : Ndt + 1
