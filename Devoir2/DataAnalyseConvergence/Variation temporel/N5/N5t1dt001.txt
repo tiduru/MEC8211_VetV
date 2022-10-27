@@ -1,11 +1,3 @@
-% Model:              Devoir2_V11.mph
-% Version:            COMSOL 5.6.0.401
-% Date:               Oct 26 2022, 19:05
-% Dimension:          1
-% Nodes:              5
-% Expressions:        1
-% Description:        Température
-% R                       T2 (K) @ t=1, delta_t=0.01
 0                         4.173417868631309E-6
 0.12499999999999997       2.8233240707137134E-4
 0.24999999999999994       0.028637465944262697
