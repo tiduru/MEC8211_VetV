@@ -7,10 +7,10 @@
 % Timothée Duruisseau 1949883
 %
 % Cette fonction résout l'équation différentielle représentant la 2e loi
-% de Frick exprimée en coordonnées cylindriques avec un terme source
+% de Fick exprimée en coordonnées cylindriques avec un terme source
 % associé à la solution manufacturée suivante:
 %
-% C_hat(t,r)=(1-1/(1+t))*(cos(pi*r^2/(2*R^2)))^2
+% C_hat(t,r)=C0(1-1/(1+t/t0))*(cos(pi*r^2/(2*R^2)))^2
 % 
 % La fonction calcule C(r,t) pour:
 %
@@ -27,21 +27,22 @@
 %   entrée : Ntot   - Nombre de noeuds, Entier >= 3
 %            dt     - Pas de temps [an], > 0
 %            Ndt    - Nombre de pas de temps, Entier >= 1
+%            t0     - Constante de temps [an]
 %
 %   sortie : C      - Concentrations [mol/m^3]. Taille Ntot
 %            Cmms   - Concentrations de la solution manufacturée
 %                     [mol/m^3]. Taille Ntot
 %            rpos   - Position des noeuds (r_i). Taille Ntot
 %
-%   test : 50 noeuds, 30 incréments d'un mois:
-%          [C, Cmms, r] = FrickDFMMS(50, 1/12, 30);
+%   test : 50 noeuds, 30 incréments d'un mois, constante temporelle de
+%          0.001 an: [C, Cmms, r] = FrickDFMMS(50, 1/12, 30, 1E-3);
 %
 % Historique
 % 19-Oct-2022 : Création
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [C, Cmms, rpos] = FickDFMMS(Ntot, dt, Ndt)
+function [C, Cmms, rpos] = FickDFMMS(Ntot, dt, Ndt, t0)
 
 % Validation de toutes les variables d'entrée
 valid = true;
@@ -55,6 +56,10 @@ if(dt <= 0)
 end
 if(Ndt < 1 || (floor(Ndt) ~= ceil(Ndt)))
    disp("Le nombre de pas de temps Ndt doit être une entier >= 1");
+   valid = false;
+end
+if(t0 <= 0)
+   disp("La constante de temps t0 doit être > 0");
    valid = false;
 end
 if(~valid)
@@ -83,6 +88,7 @@ M = zeros(Ntot, Ntot);   % Matrice [M] à gauche du système linéaire
 V = zeros(Ntot, 1);      % Vecteur {V} à droite du système linéaire
 
 % Terme source S(t,r)
+C0 = 1;     % Concentration maximale en regime stationnaire [mol/m^3]
 syms t;
 syms r;
 syms Rs;
@@ -94,10 +100,10 @@ syms C_hat(t,r,Rs);          % Solution manufacturée
 syms dC_hat_sur_rdr(t,r,Rs); % (1/r) * d(C_hat)/dr
 syms S(t,r,Rs,ks,Ds);        % Terme source
 
-f(t) = 1-1/(1+t);
-A(r,Rs) = (pi/2)*(r/Rs)^2; 
-C_hat(t,r,Rs)=f(t)*cos(A(r,Rs))^2; % Solution manufacturée
-dC_hat_sur_rdr(t,r,Rs) = -f(t)*(pi/Rs^2)*sin(2*A(r,Rs));
+f(t) = 1-1/(1+(t/t0));
+A(r,Rs) = (pi/2)*((r/Rs)^2);
+C_hat(t,r,Rs)=C0*f(t)*cos(A(r,Rs))^2; % Solution manufacturée
+dC_hat_sur_rdr(t,r,Rs) = -C0*f(t)*(pi/Rs^2)*sin(2*A(r,Rs));
 S(t,r,Rs,ks,Ds) = diff(C_hat(t,r,Rs),t,1) - Ds*dC_hat_sur_rdr(t,r,Rs) - ...
                   Ds*diff(C_hat(t,r,Rs),r,2) + ks*C_hat(t,r,Rs);
 
