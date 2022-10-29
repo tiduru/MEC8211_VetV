@@ -166,9 +166,9 @@ for i = 3:4
     axes("XScale","log","YScale","log");
     set(gca,'Box','on');
     hold on
-    p1 = loglog(dt, L1T(i-2,:));
-    p2 = loglog(dt, L2T(i-2,:));
-    p3 = loglog(dt, LinfT(i-2,:));
+    p1 = loglog(dt, L1T(i-2,:), '-s');
+    p2 = loglog(dt, L2T(i-2,:), '-s');
+    p3 = loglog(dt, LinfT(i-2,:), '-s');
 
     p1(1).MarkerFaceColor = p1(1).Color;
     p2(1).MarkerFaceColor = p2(1).Color;
