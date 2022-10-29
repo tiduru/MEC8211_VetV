@@ -92,6 +92,7 @@ end
 
 for i = 1:3
     figure(i);
+    axes("XScale","log","YScale","log");
     hold on
     loglog(0.5./(N-1), L1S(:,i));
     loglog(0.5./(N-1), L2S(:,i));
@@ -106,12 +107,13 @@ end
 
 for i = 4:6
     figure(i);
+    axes("XScale","log","YScale","log");
     hold on
     loglog(dt, L1T(i-3,:));
     loglog(dt, L2T(i-3,:));
     loglog(dt, LinfT(i-3,:));
     title({"Erreur en fonction de la variation temporelle","h = "+string(0.5/32)+" m ; t = "+string(tf(i-3))})
-    xlabel("dt [s]")
+    xlabel("dt [a]")
     ylabel("Erreur")
     legend({"L1","L2","L_{inf}"},"location","best")
     hold off
