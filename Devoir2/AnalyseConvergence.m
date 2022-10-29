@@ -7,7 +7,7 @@ clear all; clc; close all;
 N = [3,5,9,17,33];
 dt = [0.001,0.01,0.1,1];
 dt_text = ["0001","001","01","1"];
-tf = [1,10,25];
+tf = [10,50];
 
 %% Data from COMSOL
 DataDirectory = "./DataAnalyseConvergence/";
@@ -18,7 +18,7 @@ DataS = {}; % {N, t}(2)
 
 for i = 1:length(N)
     for j = 1:length(tf)
-        DataS{i,j} = load(DataDirectory+VS+"N"+string(N(i))+"t"+string(tf(j))+"dt"+dt_text(3)+".txt");
+        DataS{i,j} = load(DataDirectory+VS+"N"+string(N(i))+"t"+string(tf(j))+"dt"+dt_text(1)+".txt");
     end
 end
 
@@ -34,7 +34,7 @@ end
 SimS = {};
 for i = 1:length(N)
     for j = 1:length(tf)
-        [SimS{i,j}(:,2),SimS{i,j}(:,1)] = FickDF(N(i),dt(3),tf(j)/dt(3),2,1);
+        [SimS{i,j}(:,2),SimS{i,j}(:,1)] = FickDF(N(i),dt(1),tf(j)/dt(1),2,1);
     end
 end
 
@@ -90,7 +90,7 @@ for i = 1:length(tf)
     end
 end
 
-for i = 1:3
+for i = 1:2
     figure(i);
     axes("XScale","log","YScale","log");
     hold on
@@ -105,14 +105,14 @@ for i = 1:3
     grid on
 end
 
-for i = 4:6
+for i = 3:4
     figure(i);
     axes("XScale","log","YScale","log");
     hold on
-    loglog(dt, L1T(i-3,:));
-    loglog(dt, L2T(i-3,:));
-    loglog(dt, LinfT(i-3,:));
-    title({"Erreur en fonction de la variation temporelle","h = "+string(0.5/32)+" m ; t = "+string(tf(i-3))})
+    loglog(dt, L1T(i-2,:));
+    loglog(dt, L2T(i-2,:));
+    loglog(dt, LinfT(i-2,:));
+    title({"Erreur en fonction de la variation temporelle","h = "+string(0.5/32)+" m ; t = "+string(tf(i-2))})
     xlabel("dt [a]")
     ylabel("Erreur")
     legend({"L1","L2","L_{inf}"},"location","best")
