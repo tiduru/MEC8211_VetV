@@ -97,7 +97,7 @@ u(1,1) = 0;
 u(1,Ntot) = 0;
 
 % Déplacement initial à chaque noeud interne
-f = zeros(Ntot);         
+f = zeros(Ntot,1);         
 for i=2:Ntot-1
    f(i) = fx(dx*(i-1));
    u(1,i) = f(i);
@@ -106,9 +106,8 @@ end
 % Équation spéciale pour le premier pas de temps
 for i=2:Ntot-1
    Si = Sxt(dx*(i-1),0); % Terme source au noeud i, temps t=0
-   u(2,i) = ((1-A*B)^-1)*(A*C2*(f(i+1)+f(i-1)) + 2*A*(1-C2)*f(i)+ A*Si*dt^2);
+   u(2,i) = ((1-A*B)^-1)*(A*C2*(f(i+1)+f(i-1))+2*A*(1-C2)*f(i)+A*Si*(dt^2));
 end
-
 % Solution par différences finies (explicite)
 for t=3:Ndt+1
   for i=2:Ntot-1
