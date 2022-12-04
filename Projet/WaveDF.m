@@ -38,6 +38,8 @@
 %
 % Historique
 % 22-Nov-2022 : Création
+% 03-Dec-2022 : Corrections pour éviter des divisions suite à la revue du code
+% 04-Dec-2022 : Corriger la lecture du terme source
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -73,12 +75,14 @@ if(~valid)
    error("Au moins un des arguments est invalide");
 end
 
-% Intervalles dx
+% Intervalles dx et position des noeuds
 dx = L/(Ntot-1);
+x = 0:dx:L;
 
 % Constantes
-A = (1+b*dt/2)^-1;
-B = (b*dt/2 - 1);
+A = (1+0.5*b*dt)^-1;
+B = (0.5*b*dt-1);
+D = (1-A*B)^-1;
 C = sqrt(T/rho)*dt/dx; % Nombre de Courant
 if(C > 1)
    msg = sprintf("Le nombre de Courant de %.3f est supérieur à 1.", C);
@@ -93,28 +97,28 @@ temps = 0:dt:Ndt*dt;     % Temps discrets de la simulation [s]
 u = zeros(Ndt, Ntot);    % Déplacements.
 
 % Conditions frontière de Dirichlet
-u(1,1) = 0;
-u(1,Ntot) = 0;
+u(:,1) = 0;
+u(:,Ntot) = 0;
 
 % Déplacement initial à chaque noeud interne
 f = zeros(Ntot,1);         
 for i=2:Ntot-1
-   f(i) = fx(dx*(i-1));
+   f(i) = fx(x(i));
    u(1,i) = f(i);
 end
 
 % Équation spéciale pour le premier pas de temps
 for i=2:Ntot-1
-   Si = Sxt(dx*(i-1),0); % Terme source au noeud i, temps t=0
-   u(2,i) = ((1-A*B)^-1)*(A*C2*(f(i+1)+f(i-1))+2*A*(1-C2)*f(i)+A*Si*(dt^2));
+   Si0 = Sxt(x(i),0); % Terme source au noeud i, temps t=0
+   u(2,i) = A*D*(C2*(f(i+1)+f(i-1))+2*(1-C2)*f(i)+Si0*(dt^2));
 end
 % Solution par différences finies (explicite)
 for t=3:Ndt+1
   for i=2:Ntot-1
-     u(t,i) = A*B*u(t-2,i) + ...
-              A*C2*u(t-1,i+1) + ...
-              2*A*(1-C2)*u(t-1,i) + ...
-              A*C2*u(t-1,i-1) + ...
-              A*(dt^2)*Sxt(dx*(i-1),dt*t);
+     u(t,i) = A*(B*u(t-2,i) + ...
+                 C2*u(t-1,i+1) + ...
+                 2*(1-C2)*u(t-1,i) + ...
+                 C2*u(t-1,i-1) + ...
+                 (dt^2)*Sxt(x(i), temps(t-1)));
   end
 end
