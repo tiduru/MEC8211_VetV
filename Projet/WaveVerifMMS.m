@@ -59,7 +59,7 @@ L = 2.0;           % Longueur de la corde [m]
 T = 39.66;         % Tension dans la corde [N]
 rho = 50.33*10^-5; % Densité linéaire [kg/m]
 c = sqrt(T/rho);   % Vitesse de propagation de l'onde
-C = 0.9;           % Nombre de courant fixé à 0.8
+C = 0.9;           % Nombre de courant fixé à 0.9
 k = 1;             % Paramètre variable
 c2= T/rho;
 
@@ -67,10 +67,10 @@ c2= T/rho;
 fx = @(x) k*x^3-k*L*x^2;
 
 % Solution manufacturée
-u_ana = @(x,t) fx(x)*cos(t);
+u_ana = @(x,t) fx(x)*cos(c*t);
 
 % Terme source obtenu de la solution manufacturée
-Sxt = @(x,t) -b*sin(t)*fx(x)-cos(t)*(fx(x) - c2*(2*k*L-6*k*x));
+Sxt = @(x,t) -b*c*sin(c*t)*fx(x)-c2*cos(c*t)*(fx(x) - 2*k*L+6*k*x);
 
 % Erreurs L1, L2 et Linf
 Niter = 1 + Nraf;
@@ -143,5 +143,16 @@ p3 = loglog(h, Linf, '-s');
 p1(1).MarkerFaceColor = p1(1).Color;
 p2(1).MarkerFaceColor = p2(1).Color;
 p3(1).MarkerFaceColor = p3(1).Color;
+
+% Triangle avec les pentes des points a et b (a > b)
+a = 6; % 1er point
+b = 7; % 2e point
+triang_x = [h(b), h(a)];
+triang_y = exp(interp1(log(h), log(L1), log(triang_x)));
+triang_y = triang_y - 5e-4*[h(b)^p_hat_L1(a) h(a)^p_hat_L1(a)];
+loglog(triang_x([1,2,2,1]), triang_y([1,1,2,1]), 'k');
+text(h(a)+0.001, exp(0.5*(log(triang_y(1))+log(triang_y(2)))), ...
+     sprintf('L_{1}=%.2f\nL_{2}=%.2f\nL_{\\infty}=%.2f', ...
+     p_hat_L1(a), p_hat_L2(a),p_hat_Linf(a)))
 
 end
